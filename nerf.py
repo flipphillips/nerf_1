@@ -77,7 +77,7 @@ class NerfModel(nn.Module):
         # 3D points (xs) along rays given the viewing directions (ds) of the rays
 
         outputs = self.early_mlp(rays_samples_encoded)
-        outputs = self.late_mlp(torch.cat([rays_samples_encoded, outputs], dim=-1))
+        outputs = self.later_mlp(torch.cat([rays_samples_encoded, outputs], dim=-1))
         outputs = self.sigma_layer(outputs)
         sigma_is = torch.relu(outputs[:, 0])  # volume densities
         outputs = self.pre_final_layer(torch.cat([view_dirs_encoded, outputs[:, 1:]], dim=-1))
