@@ -169,7 +169,7 @@ def main():
     psnrs = []
     iternums = []
     # See Section 5.3.
-    num_iters = 300000
+    num_iters = 20000
     display_every = 100
     coarse_mlp.train()
     fine_mlp.train()
