@@ -4,6 +4,9 @@ import torch.optim as optim
 import numpy as np
 import matplotlib.pyplot as plt
 from rendering_utils import run_one_iter_of_nerf, render_radiance_volume, get_fine_query_points, get_coarse_query_points
+import imageio
+import os
+import time
 
 
 class NerfModel(nn.Module):
