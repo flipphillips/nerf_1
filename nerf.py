@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 import matplotlib.pyplot as plt
-from rendering_utils import run_one_iter_of_nerf, render_radiance_volume, get_fine_query_points ,get_coarse_query_points
+from rendering_utils import run_one_iter_of_nerf, render_radiance_volume, get_fine_query_points, get_coarse_query_points
 
 
 class NerfModel(nn.Module):
@@ -254,6 +254,13 @@ def main():
             coarse_mlp.train()
             fine_mlp.train()
 
+    print("Completed Training!")
+    print("Saving model...")
+    torch.save(fine_mlp, "/")
     print("Done!")
 
-main()
+
+
+
+
+
