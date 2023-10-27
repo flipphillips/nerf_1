@@ -254,12 +254,15 @@ def main():
             plt.title("PSNR")
             plt.show()
 
+            if i%1000 == 0:
+                torch.save(fine_mlp.state_dict(), "/content/checkpoints")
+
             coarse_mlp.train()
             fine_mlp.train()
 
     print("Completed Training!")
     print("Saving model...")
-    torch.save(fine_mlp, "/")
+    torch.save(fine_mlp, "/content")
     print("Done!")
 
 
