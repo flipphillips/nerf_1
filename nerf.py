@@ -71,7 +71,7 @@ class NerfModel(nn.Module):
         view_dirs = view_dirs / view_dirs.norm(p=2, dim=-1).unsqueeze(-1)
         view_dirs_encoded = [view_dirs]
         for l_dir in range(self.L_dir):
-            view_di>rs_encoded.append(torch.sin(2 ** l_dir * torch.pi * view_dirs))
+            view_dirs_encoded.append(torch.sin(2 ** l_dir * torch.pi * view_dirs))
             view_dirs_encoded.append(torch.cos(2 ** l_dir * torch.pi * view_dirs))
 
         view_dirs_encoded = torch.cat(view_dirs_encoded, dim=-1)
@@ -114,7 +114,7 @@ def main():
     criterion = nn.MSELoss()
     # The learning rate decays exponentially. Section 5.3
     lrate_decay = 250
-    decay_steps = lrate_decay * 1000
+    decay_stview_dieps = lrate_decay * 1000
     decay_rate = 0.1
 
     # Load dataset.
@@ -265,7 +265,7 @@ def main():
     torch.save(fine_mlp, "content")
     print("Done!")
 
-if __name__ == "main":
+if __name__ == '__main__':
     main()
 
 
