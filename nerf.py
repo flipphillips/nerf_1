@@ -71,7 +71,7 @@ class NerfModel(nn.Module):
         view_dirs = view_dirs / view_dirs.norm(p=2, dim=-1).unsqueeze(-1)
         view_dirs_encoded = [view_dirs]
         for l_dir in range(self.L_dir):
-            view_dirs_encoded.append(torch.sin(2 ** l_dir * torch.pi * view_dirs))
+            view_di>rs_encoded.append(torch.sin(2 ** l_dir * torch.pi * view_dirs))
             view_dirs_encoded.append(torch.cos(2 ** l_dir * torch.pi * view_dirs))
 
         view_dirs_encoded = torch.cat(view_dirs_encoded, dim=-1)
@@ -255,16 +255,18 @@ def main():
             plt.show()
 
             if i%1000 == 0:
-                torch.save(fine_mlp.state_dict(), "/content/checkpoints")
+                torch.save(fine_mlp.state_dict(), "content/checkpoints")
 
             coarse_mlp.train()
             fine_mlp.train()
 
     print("Completed Training!")
     print("Saving model...")
-    torch.save(fine_mlp, "/content")
+    torch.save(fine_mlp, "content")
     print("Done!")
 
+if __name__ == "main":
+    main()
 
 
 
