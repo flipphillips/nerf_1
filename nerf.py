@@ -102,10 +102,10 @@ def main():
     fine_mlp = NerfModel().to(device)
 
     # Number of query points passed through the MLP at a time.
-    chunk_size = 1024 * 32
+    chunk_size = 512*16 #1024 * 32
 
     # Number of training rays per iteration. SEC:5.3
-    batch_img_size = 64
+    batch_img_size = 32 #64
     n_batch_pix = batch_img_size ** 2
 
     # INITIALIZE OPTIMIZER. SEC 5.3
@@ -114,7 +114,7 @@ def main():
     criterion = nn.MSELoss()
     # The learning rate decays exponentially. Section 5.3
     lrate_decay = 250
-    decay_stview_dieps = lrate_decay * 1000
+    decay_steps = lrate_decay * 1000
     decay_rate = 0.1
 
     # Load dataset.
@@ -140,7 +140,7 @@ def main():
     # Set up test view.
     test_idx = 150
     plt.imshow(images[test_idx])
-    plt.show()
+    plt.show(block = False)
     test_img = torch.Tensor(images[test_idx]).to(device)
     poses = data["poses"]
     test_R = torch.Tensor(poses[test_idx, :3, :3]).to(device)
@@ -169,10 +169,11 @@ def main():
     psnrs = []
     iternums = []
     # See Section 5.3.
-    num_iters = 20000
+    num_iters = 
     display_every = 100
     coarse_mlp.train()
     fine_mlp.train()
+    training_start_time = time.time()
     for i in range(num_iters):
         # Sample image and associated pose.
         target_img_idx = np.random.randint(images.shape[0])
@@ -239,7 +240,7 @@ def main():
                 )
 
             loss = criterion(C_rs_f, test_img)
-            print(f"Loss: {loss.item()}")
+            print(f"Iterations:{i} | Loss: {loss.item()}")
             psnr = -10.0 * torch.log10(loss)
 
             psnrs.append(psnr.item())
@@ -252,19 +253,19 @@ def main():
             plt.subplot(122)
             plt.plot(iternums, psnrs)
             plt.title("PSNR")
-            plt.show()
+            plt.show(block=False)
 
             if i%1000 == 0:
                 torch.save(fine_mlp.state_dict(), "content/checkpoints")
 
             coarse_mlp.train()
             fine_mlp.train()
-
+    training_end_time = time.time()
     print("Completed Training!")
-    print("Saving model...")
-    torch.save(fine_mlp, "content")
+    #print("Saving model...")
+   # torch.save(fine_mlp, "content")
     print("Done!")
-
+    print('Training took {:.2f}s'.format(training_end_time-training_start_time))
 if __name__ == '__main__':
     main()
 
