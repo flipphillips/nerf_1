@@ -266,6 +266,7 @@ def main():
    # torch.save(fine_mlp, "content")
     print("Done!")
     print('Training took {:.2f}s'.format(training_end_time-training_start_time))
+
 if __name__ == '__main__':
     main()
 
