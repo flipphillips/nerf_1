@@ -169,7 +169,7 @@ def main():
     psnrs = []
     iternums = []
     # See Section 5.3.
-    num_iters = 
+    num_iters = 300
     display_every = 100
     coarse_mlp.train()
     fine_mlp.train()
@@ -262,11 +262,14 @@ def main():
             fine_mlp.train()
     training_end_time = time.time()
     print("Completed Training!")
+    total_training_time_seconds = training_end_time-training_start_time
+    formatted_time = time.strftime("%H:%M:%S",time.gmtime(total_training_time_seconds))
+
     #print("Saving model...")
    # torch.save(fine_mlp, "content")
     print("Done!")
-    print('Training took {:.2f}s'.format(training_end_time-training_start_time))
-
+    print(f'Total time required for training :{formatted_time} ')
+    
 if __name__ == '__main__':
     main()
 
