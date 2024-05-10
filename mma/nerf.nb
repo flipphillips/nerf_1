@@ -1,0 +1,332 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     12743,        322]
+NotebookOptionsPosition[     11637,        296]
+NotebookOutlinePosition[     12033,        312]
+CellTagsIndexPosition[     11990,        309]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"LPos", "=", "10"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"LDir", "=", "4"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"posEncFeatures", "=", 
+   RowBox[{"3", "+", 
+    RowBox[{"3", "*", "2", "*", "LPos"}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"dirEncFeatures", "=", 
+   RowBox[{"3", "+", 
+    RowBox[{"3", "*", "2", "*", "LDir"}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"inFeatures", "=", "posEncFeatures"}], ";"}], " ", 
+  RowBox[{"(*", "63", "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"numNeurons", "=", "256"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.924365906833599*^9, 3.924365907978962*^9}},
+ CellLabel->"In[21]:=",ExpressionUUID->"c233de70-4eea-46e6-ae0e-8db52dc13a37"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"earlyMLP", "=", 
+   RowBox[{"NetChain", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+       RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}], ",", 
+       RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+       RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}], ",", 
+       RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+       RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}], ",", 
+       RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+       RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}], ",", 
+       RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+       RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}]}], "}"}], ",", 
+     RowBox[{"\"\<Input\>\"", "->", "inFeatures"}]}], "]"}]}], ";"}]], "Input",\
+
+ CellChangeTimes->{{3.9243659257924633`*^9, 3.924365930706002*^9}},
+ CellLabel->"In[28]:=",ExpressionUUID->"6e5aaaed-7cc0-4851-b3c7-c8d0fbb72617"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"laterMLP", "=", 
+   RowBox[{"NetChain", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+       RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}], ",", 
+       RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+       RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}], ",", 
+       RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+       RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}]}], "}"}], ",", 
+     RowBox[{"\"\<Input\>\"", "->", 
+      RowBox[{"(", 
+       RowBox[{"posEncFeatures", "+", "numNeurons"}], ")"}]}]}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.924365941094529*^9, 3.924365943280726*^9}},
+ CellLabel->"In[29]:=",ExpressionUUID->"b68e9f52-ad09-4e8d-91a3-79a620500355"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"sigmaLayer", "=", 
+    RowBox[{"LinearLayer", "[", 
+     RowBox[{"numNeurons", "+", "1"}], "]"}]}], ";"}], 
+  "\n"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"preFinalLayer", "=", 
+    RowBox[{"NetChain", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"LinearLayer", "[", 
+         RowBox[{"Quotient", "[", 
+          RowBox[{"numNeurons", ",", "2"}], "]"}], "]"}], ",", 
+        RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}]}], "}"}], ",", 
+      
+      RowBox[{"\"\<Input\>\"", "->", 
+       RowBox[{"(", 
+        RowBox[{"dirEncFeatures", "+", "numNeurons"}], ")"}]}]}], "]"}]}], 
+   ";"}], "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{"finalLayer", "=", 
+   RowBox[{"NetChain", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"LinearLayer", "[", "3", "]"}], ",", 
+       RowBox[{"ElementwiseLayer", "[", "\"\<Sigmoid\>\"", "]"}]}], "}"}], 
+     ",", 
+     RowBox[{"\"\<Input\>\"", "->", 
+      RowBox[{"(", 
+       RowBox[{"Quotient", "[", 
+        RowBox[{"numNeurons", ",", "2"}], "]"}], ")"}]}]}], "]"}]}], 
+  ";"}], "\n"}], "Input",
+ CellChangeTimes->{{3.924365956632406*^9, 3.924365956632772*^9}, {
+  3.924366141533216*^9, 3.92436617217677*^9}},
+ CellLabel->"In[35]:=",ExpressionUUID->"f1120030-1a1a-4484-88ae-c57c6e8c38e5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"combinedModel", "=", 
+    RowBox[{"NetGraph", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"\"\<earlyMLP\>\"", "->", "earlyMLP"}], ",", 
+        RowBox[{"\"\<laterMLP\>\"", "->", "laterMLP"}], ",", 
+        RowBox[{"\"\<sigmaLayer\>\"", "->", "sigmaLayer"}], ",", 
+        RowBox[{"\"\<preFinalLayer\>\"", "->", "preFinalLayer"}], ",", 
+        RowBox[{"\"\<finalLayer\>\"", "->", "finalLayer"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"\"\<earlyMLP\>\"", "->", "\"\<laterMLP\>\""}], ",", 
+        RowBox[{"\"\<laterMLP\>\"", "->", "\"\<sigmaLayer\>\""}], ",", 
+        RowBox[{"\"\<sigmaLayer\>\"", "->", "\"\<preFinalLayer\>\""}], ",", 
+        RowBox[{"\"\<preFinalLayer\>\"", "->", "\"\<finalLayer\>\""}]}], 
+       "}"}], ",", 
+      RowBox[{"\"\<Input\>\"", "->", "inFeatures"}]}], "]"}]}], ";"}], 
+  "\n"}]], "Input",
+ CellChangeTimes->{{3.924366004871307*^9, 3.92436600487167*^9}},
+ CellLabel->"In[38]:=",
+ CellID->481147660,ExpressionUUID->"78551242-32bc-45b1-ac41-f3445e0f0ba7"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "NetGraph", "ninctyp2", 
+   "\"Incompatible \\!\\(\\*RowBox[{\\\"\\\\\\\"dimension\\\\\\\"\\\"}]\\)s \
+for output of \\!\\(\\*RowBox[{\\\"\\\\\\\"node \
+\\\\\\\\\\\\\\\"earlyMLP\\\\\\\\\\\\\\\"\\\\\\\"\\\"}]\\), \
+\\!\\(\\*RowBox[{\\\"\\\\\\\"NetChain[\[LeftGuillemet]10\[RightGuillemet]]\\\\\
+\\\"\\\"}]\\), and input to \\!\\(\\*RowBox[{\\\"\\\\\\\"node \
+\\\\\\\\\\\\\\\"laterMLP\\\\\\\\\\\\\\\"\\\\\\\"\\\"}]\\), \
+\\!\\(\\*RowBox[{\\\"\\\\\\\"NetChain[\[LeftGuillemet]6\[RightGuillemet]]\\\\\
+\\\"\\\"}]\\); \\!\\(\\*RowBox[{\\\"\\\\\\\"a length-256 vector of real \
+numbers\\\\\\\"\\\"}]\\) is not compatible with \
+\\!\\(\\*RowBox[{\\\"\\\\\\\"a length-319 vector of real \
+numbers\\\\\\\"\\\"}]\\), respectively.\"", 2, 38, 14, 18983410000434885392, 
+   "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.9243661767900877`*^9},
+ CellLabel->
+  "During evaluation of \
+In[38]:=",ExpressionUUID->"d79c2d4e-5434-4857-b192-9b7f9a2acdd2"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Define", " ", "constants", " ", "and", " ", "input", " ", "sizes"}], 
+   "*)"}], 
+  RowBox[{
+   RowBox[{
+    RowBox[{"LPos", "=", "10"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"LDir", "=", "4"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"posEncFeatures", "=", 
+     RowBox[{"3", "+", 
+      RowBox[{"3", "*", "2", "*", "LPos"}]}]}], ";"}], " ", 
+   RowBox[{"(*", "63", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"dirEncFeatures", "=", 
+     RowBox[{"3", "+", 
+      RowBox[{"3", "*", "2", "*", "LDir"}]}]}], ";"}], " ", 
+   RowBox[{"(*", "15", "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"numNeurons", "=", "256"}], ";"}], "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", 
+    RowBox[{"Define", " ", "the", " ", "network", " ", "structure"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"network", "=", 
+     RowBox[{"NetGraph", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"\"\<earlyMLP\>\"", "->", 
+          RowBox[{"NetChain", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+              RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}], ",", 
+              RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+              RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}], ",", 
+              RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+              RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}], ",", 
+              RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+              RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}], ",", 
+              RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+              RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}]}], "}"}],
+             ",", 
+            RowBox[{"\"\<Input\>\"", "->", "posEncFeatures"}]}], "]"}]}], ",", 
+         RowBox[{"\"\<concat\>\"", "->", 
+          RowBox[{"CatenateLayer", "[", "]"}]}], ",", 
+         RowBox[{"\"\<laterMLP\>\"", "->", 
+          RowBox[{"NetChain", "[", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+             RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}], ",", 
+             RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+             RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}], ",", 
+             RowBox[{"LinearLayer", "[", "256", "]"}], ",", 
+             RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}]}], "}"}], 
+           "]"}]}], ",", 
+         RowBox[{"\"\<sigmaLayer\>\"", "->", 
+          RowBox[{"LinearLayer", "[", 
+           RowBox[{"numNeurons", "+", "1"}], "]"}]}], ",", 
+         RowBox[{"\"\<preFinalLayer\>\"", "->", 
+          RowBox[{"NetChain", "[", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"LinearLayer", "[", 
+              RowBox[{"Quotient", "[", 
+               RowBox[{"numNeurons", ",", "2"}], "]"}], "]"}], ",", 
+             RowBox[{"ElementwiseLayer", "[", "\"\<ReLU\>\"", "]"}]}], "}"}], 
+           "]"}]}], ",", 
+         RowBox[{"\"\<finalLayer\>\"", "->", 
+          RowBox[{"NetChain", "[", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"LinearLayer", "[", "3", "]"}], ",", 
+             RowBox[{"ElementwiseLayer", "[", "\"\<Sigmoid\>\"", "]"}]}], 
+            "}"}], "]"}]}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"\"\<earlyMLP\>\"", "->", "\"\<concat\>\""}], ",", 
+         RowBox[{
+          RowBox[{"NetPort", "[", "\"\<Input1\>\"", "]"}], "->", 
+          "\"\<concat\>\""}], ",", 
+         RowBox[{"\"\<concat\>\"", "->", "\"\<laterMLP\>\""}], ",", 
+         RowBox[{"\"\<laterMLP\>\"", "->", "\"\<sigmaLayer\>\""}], ",", 
+         RowBox[{"\"\<sigmaLayer\>\"", "->", "\"\<preFinalLayer\>\""}], ",", 
+         RowBox[{"\"\<preFinalLayer\>\"", "->", "\"\<finalLayer\>\""}]}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"\"\<Input1\>\"", "->", "posEncFeatures"}], ",", 
+         RowBox[{"\"\<Input2\>\"", "->", "dirEncFeatures"}]}], "}"}]}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Add", " ", "any", " ", "additional", " ", "configurations", " ", "like", 
+     " ", "loss", " ", "layers", " ", "or", " ", "training", " ", "method", 
+     " ", "if", " ", "needed"}], "*)"}], "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.924366277498529*^9, 3.924366277498941*^9}},
+ CellLabel->"In[39]:=",ExpressionUUID->"ef709a64-b6b5-4622-b25b-29440b82ac15"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "NetGraph", "argt", 
+   "\"\\!\\(\\*RowBox[{\\\"NetGraph\\\"}]\\) called with \
+\\!\\(\\*RowBox[{\\\"3\\\"}]\\) arguments; \\!\\(\\*RowBox[{\\\"1\\\"}]\\) or \
+\\!\\(\\*RowBox[{\\\"2\\\"}]\\) arguments are expected.\"", 2, 44, 15, 
+   18983410000434885392, "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.924366279662788*^9},
+ CellLabel->
+  "During evaluation of \
+In[39]:=",ExpressionUUID->"9b52afa1-1040-4d1b-915d-1cdd411543cb"]
+}, Open  ]]
+},
+WindowSize->{860.25, 1023},
+WindowMargins->{{Automatic, 381.75}, {15, Automatic}},
+FrontEndVersion->"14.1 for Linux x86 (64-bit) (May 9, 2024)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"0c69affb-9788-4156-b435-3fc8943d2082"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[554, 20, 709, 20, 166, "Input",ExpressionUUID->"c233de70-4eea-46e6-ae0e-8db52dc13a37"],
+Cell[1266, 42, 985, 20, 125, "Input",ExpressionUUID->"6e5aaaed-7cc0-4851-b3c7-c8d0fbb72617"],
+Cell[2254, 64, 804, 18, 97, "Input",ExpressionUUID->"b68e9f52-ad09-4e8d-91a3-79a620500355"],
+Cell[3061, 84, 1358, 39, 258, "Input",ExpressionUUID->"f1120030-1a1a-4484-88ae-c57c6e8c38e5"],
+Cell[CellGroupData[{
+Cell[4444, 127, 1090, 24, 233, "Input",ExpressionUUID->"78551242-32bc-45b1-ac41-f3445e0f0ba7",
+ CellID->481147660],
+Cell[5537, 153, 992, 19, 72, "Message",ExpressionUUID->"d79c2d4e-5434-4857-b192-9b7f9a2acdd2"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6566, 177, 4567, 103, 887, "Input",ExpressionUUID->"ef709a64-b6b5-4622-b25b-29440b82ac15"],
+Cell[11136, 282, 485, 11, 32, "Message",ExpressionUUID->"9b52afa1-1040-4d1b-915d-1cdd411543cb"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+
